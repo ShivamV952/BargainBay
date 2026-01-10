@@ -1,12 +1,16 @@
 "use client";
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
-import signupLottie from "./signupLottie.json";
-import Link from "next/link";
-import { supabase } from "@/lib/SupabaseClient";
-import { ToastContainer, toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
+
+import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import signupLottie from "./signupLottie.json";
+import { supabase } from "@/lib/SupabaseClient";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 const page = () => {
   const [username, setusername] = useState("");
   const [email, setEmail] = useState("");
@@ -14,7 +18,6 @@ const page = () => {
   const handlesubmit = async (e: any) => {
     try {
       e.preventDefault();
-      console.log(username, " ", email, " ", password);
       const { data, error } = await supabase.auth.signUp({
         email: email,
         password: password,
@@ -25,17 +28,24 @@ const page = () => {
         },
       });
       if (error) {
-        toast("Error during sign-up!");
+        toast.error(error.message || "Error during sign-up!");
+        console.error("Sign-up error:", error);
       } else {
-        toast("Please check your mail!");
-         const response = await supabase.from("profiles").insert({
-           id: data?.user?.id,
-           name: username,
-         });
-         console.log(response)
+        toast.success("Please check your mail!");
+        if (data?.user?.id) {
+          const { error: profileError } = await supabase.from("profiles").insert({
+            id: data.user.id,
+            name: username,
+          });
+          if (profileError) {
+            console.error("Profile creation error:", profileError);
+            toast.error("Account created but profile setup failed: " + profileError.message);
+          }
+        }
       }
-    } catch (error) {
-      toast("Error during sign-up!");
+    } catch (error: any) {
+      const errorMessage = error?.message || "An unexpected error occurred during sign-up";
+      toast.error(errorMessage);
       console.error("Error during sign-up:", error);
     }
   };

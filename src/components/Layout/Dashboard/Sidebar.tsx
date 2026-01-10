@@ -1,14 +1,15 @@
-"use client";
+'use client'
 import { supabase } from "@/lib/SupabaseClient";
 import Link from "next/link";
 import React from "react";
 import { useRouter } from "next/navigation";
 const Sidebar = () => {
-  const router = useRouter();
-  const Logout = async () => {
+
+  const router =useRouter()
+  const Logout=async()=>{
     const { error } = await supabase.auth.signOut();
-    router.push("/");
-  };
+    router.push('/')
+  }
 
   return (
     <div className="min-h-screen   fixed   bg-gray-50 text-gray-800">
