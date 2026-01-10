@@ -1,11 +1,13 @@
 "use client";
-import { useState, useEffect } from "react";
-import Image from "next/image";
+
 import {
   GoogleGenerativeAI,
-  HarmCategory,
   HarmBlockThreshold,
+  HarmCategory,
 } from "@google/generative-ai";
+import { useEffect, useState } from "react";
+
+import Image from "next/image";
 
 interface Message {
   isSafe: any;
@@ -30,8 +32,8 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [promptHidden, setPromptHidden] = useState<boolean>(false);
 
-  const API_KEY = "AlzaSyDere38bEmLSYpEDCykmCKeQeYBbD4Gda4";
-  const MODEL_NAME = "gemini-2.0-flash-lite";
+  const API_KEY = "AIzaSyA3vSIwAMZon-UDy_is5Ya7-IJCsLWjlTQ";
+  const MODEL_NAME = "gemini-2.5-flash";
 
   const questionSet = [
     [

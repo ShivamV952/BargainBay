@@ -1,7 +1,9 @@
 "use client";
+
 import React, { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+
 import { supabase } from "@/lib/SupabaseClient";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [about, setAbout] = useState("");
@@ -58,18 +60,23 @@ const Page = () => {
   const handleSubmit=async(e:any)=>{
      e.preventDefault()
      const imageName = imageProfile.name + generated(6);
-     console.log(imageName);
+     const imagePath = "/" + imageName;
+     console.log("Uploading image:", imagePath);
      var { data, error } = await supabase.storage
        .from("product_images")
-       .upload("/" + imageName, imageProfile, {
+       .upload(imagePath, imageProfile, {
          cacheControl: "3600",
          upsert: false,
        });
        console.log({data,error})
        
-     const imageurl =
-       "https://nllszuxcqbnhgngchcau.supabase.co/storage/v1/object/public/product_images/" +
-       imageName;
+     // Get the public URL for the uploaded image - use the same path as upload
+     const { data: urlData } = supabase.storage
+       .from("product_images")
+       .getPublicUrl(imagePath);
+     
+     const imageurl = urlData.publicUrl;
+     console.log("Profile image URL:", imageurl);
         console.log(user.id)
         const response = await supabase.from("profiles").update({
           profile_pic: imageurl,

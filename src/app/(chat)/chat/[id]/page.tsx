@@ -118,16 +118,17 @@ const Page = ({ params }: { params: { id: string } }) => {
     return result;
   }
 
-  const sendVideo = async () => {
-    const roomid = generateRandomString(5);
+  const sendVideo=async()=>{
+        
+     const roomid = generateRandomString(5);
 
-    const { error, data } = await supabase.from("messages").insert({
-      content: `https://www.bargainbay.site/room/${roomid}`,
-      sender_id: senderID,
-      receiver_id: receiver.id,
-      isVideo: true,
-    });
-  };
+      const { error, data } = await supabase.from("messages").insert({
+        content: `https://www.bargainbay.site/room/${roomid}`,
+        sender_id: senderID,
+        receiver_id: receiver.id,
+        isVideo: true,
+      });
+  }
 
   return (
     <ThemeProvider themeMode="light">
@@ -174,19 +175,13 @@ const Page = ({ params }: { params: { id: string } }) => {
                             className="h-10 w-10 rounded-full"
                           />
                           <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                            {item.isVideo ? (
-                              <div className=" flex flex-col items-center justify-center gap-y-2">
-                                Join Video Call
-                                <Link
-                                  className="bg-green-400 text-center  w-[200px] text-base text-white px-16 py-2 rounded-lg"
-                                  href={item.content}
-                                >
-                                  Join
-                                </Link>
-                              </div>
-                            ) : (
-                              <div>{item.content}</div>
-                            )}
+                            {
+                              item.isVideo? <div className=" flex flex-col items-center justify-center gap-y-2">
+                                Join Video Call 
+                                <Link className="bg-green-400 text-center  w-[200px] text-base text-white px-16 py-2 rounded-lg"  href={item.content}>Join</Link>
+                              </div> :  <div>{item.content}</div>
+                            }
+
                           </div>
                         </div>
                       </div>

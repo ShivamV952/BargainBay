@@ -80,9 +80,10 @@ const Page = () => {
     const pdfBytes = await generateInvoicePdf(invoiceData);
 
     const name = `invoice-${generated(5)}`;
+    const pdfPath = "/" + name;
     var { data, error } = await supabase.storage
       .from("product_images")
-      .upload("/" + name, pdfBytes, {
+      .upload(pdfPath, pdfBytes, {
         contentType: "application/pdf",
       });
 
@@ -93,9 +94,13 @@ const Page = () => {
 
     console.log("PDF uploaded successfully:", data);
 
-    const pdfUrl =
-      "https://nllszuxcqbnhgngchcau.supabase.co/storage/v1/object/public/product_images/" +
-      name;
+    // Get the public URL for the uploaded PDF - use the same path as upload
+    const { data: urlData } = supabase.storage
+      .from("product_images")
+      .getPublicUrl(pdfPath);
+    
+    const pdfUrl = urlData.publicUrl;
+    console.log("PDF URL:", pdfUrl);
 
     const response = await supabase
       .from("offers")
