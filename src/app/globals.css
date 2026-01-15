@@ -1,6 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-kesari: #ff7722;
+  --color-orange: #ff710d;
+  --color-yellow: #ffb800;
+}
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -9,7 +13,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -17,4 +21,9 @@ input[type=number] {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
+}
+
+/* Custom utility for kesari color */
+.text-kesari {
+  color: var(--color-kesari);
 }

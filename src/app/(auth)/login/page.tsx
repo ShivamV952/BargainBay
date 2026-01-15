@@ -1,18 +1,24 @@
 "use client";
-import React, { useState } from "react";
-import { supabase } from "@/lib/SupabaseClient";
-import dynamic from "next/dynamic";
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
-import loginLottie from "./loginLottie.json";
-import Link from "next/link";
-import { ToastContainer, toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
+
+import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import loginLottie from "./loginLottie.json";
+import { supabase } from "@/lib/SupabaseClient";
 import { useRouter } from "next/navigation";
-const page = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Lottie = dynamic(() => import("lottie-react"), {
+  ssr: false,
+}) as React.ComponentType<any>;
+const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -32,7 +38,7 @@ const page = () => {
   };
 
   const googleLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         queryParams: {
@@ -127,7 +133,7 @@ const page = () => {
             Forgot your password
           </p>
           <div className="mt-2 text-xs flex justify-between items-center">
-            <p>Don't have an account?</p>
+            <p>Don&apos;t have an account?</p>
             <button className="py-2 px-5 bg-white border rounded-xl hover:scale-100 duration-300">
               <Link href={"/signup"}>Register</Link>
             </button>
@@ -145,4 +151,4 @@ const page = () => {
 // kesari #FF7722
 // white #ffffff
 // yellow #ffb800
-export default page;
+export default Page;
