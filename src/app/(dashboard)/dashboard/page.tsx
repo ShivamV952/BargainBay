@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 const Card = ({ item }: any) => {
   return (
     <a
-      href={"products/" + item.id}
+      href={"/products/" + item.id}
       className="mt-11 w-full max-w-[350px]  transform overflow-hidden rounded-lg bg-white dark:bg-slate-800 shadow-md duration-300  hover:shadow-lg"
     >
       <img
