@@ -25,7 +25,7 @@ type Product = {
 const Card = ({ item }: any) => {
   return (
     <a
-      href={"products/" + item.id}
+      href={"/products/" + item.id}
       className="mx-auto mt-11 w-full  transform overflow-hidden rounded-lg bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg"
     >
       <img
