@@ -1,31 +1,18 @@
 "use client";
-import React, { useEffect, useState, useLayoutEffect } from "react";
-import { EmojiPicker } from "@lobehub/ui";
-import { ThemeProvider, GradientButton } from "@lobehub/ui";
-import {
-  ActionIcon,
-  ChatInputActionBar,
-  ChatInputArea,
-  ChatSendButton,
-  TokenTag,
-} from "@lobehub/ui";
-import { Delete, Eraser, Languages, Send, Video } from "lucide-react";
-import { Flexbox } from "react-layout-kit";
-import { supabase } from "@/lib/SupabaseClient";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { RealtimePostgresInsertPayload } from "@supabase/supabase-js";
 
-interface Message {
-  id: string;
-  message: string;
-}
+import { Eraser, Send, Video } from "lucide-react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+
+import { EmojiPicker } from "@lobehub/ui";
+import Link from "next/link";
+import { RealtimePostgresInsertPayload } from "@supabase/supabase-js";
+import { ThemeProvider } from "@lobehub/ui";
+import { supabase } from "@/lib/SupabaseClient";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [receiver, setReceiver] = useState<any>(null);
   const [messages, setMessages] = useState<any>([]);
   const [senderID, setSenderID] = useState<any>("");
-  const router = useRouter();
 
   useLayoutEffect(() => {
     const getReceiver = async () => {
@@ -38,7 +25,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       }
     };
     getReceiver();
-  }, []);
+  }, [params.id]);
 
   useLayoutEffect(() => {
     const getUser = async () => {
@@ -87,17 +74,22 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [content, setContent] = useState<string>("");
 
   const handleSubmit = async () => {
-    if (!content.trim()) return;
+    if (!content.trim() || !receiver || !senderID) return;
     const { error, data } = await supabase.from("messages").insert({
       content: content,
       sender_id: senderID,
       receiver_id: receiver.id,
     });
+    if (error) {
+      console.error("Error sending message:", error);
+      return;
+    }
     setContent("");
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
       handleSubmit();
     }
   };
@@ -118,42 +110,60 @@ const Page = ({ params }: { params: { id: string } }) => {
     return result;
   }
 
-  const sendVideo=async()=>{
-        
-     const roomid = generateRandomString(5);
-
-      const { error, data } = await supabase.from("messages").insert({
-        content: `https://www.bargainbay.site/room/${roomid}`,
-        sender_id: senderID,
-        receiver_id: receiver.id,
-        isVideo: true,
-      });
-  }
+  const sendVideo = async () => {
+    if (!receiver || !senderID) return;
+    const roomid = generateRandomString(5);
+    const { error, data } = await supabase.from("messages").insert({
+      content: `https://www.bargainbay.site/room/${roomid}`,
+      sender_id: senderID,
+      receiver_id: receiver.id,
+      isVideo: true,
+    });
+    if (error) {
+      console.error("Error sending video call:", error);
+    }
+  };
 
   return (
     <ThemeProvider themeMode="light">
       <div className="flex justify-start w-full h-screen">
-        <div className="w-2/12 px-6 py-5 flex flex-col justify-between items-center shadow-sm bg-gray-100 border-r ">
-          <div>
+        <div className="w-2/12 px-6 py-5 flex flex-col justify-between items-center shadow-lg bg-gradient-to-b from-gray-50 to-white border-r">
+          <div className="flex flex-col items-center">
             <img
-              src="https://lh4.googleusercontent.com/proxy/XZjBQs671YZjpKSHu4nOdgKygc5oteGGQ4nznFtymv2Vr1t6lHDdhqPe-Pk-8IJe7pW4AhhKOTWRVt_b6G4qHF92n7Z1QCMVCNXCP2yayQrC-6Fichft"
-              alt=""
+              src={
+                receiver?.profile_pic ||
+                "https://lh4.googleusercontent.com/proxy/XZjBQs671YZjpKSHu4nOdgKygc5oteGGQ4nznFtymv2Vr1t6lHDdhqPe-Pk-8IJe7pW4AhhKOTWRVt_b6G4qHF92n7Z1QCMVCNXCP2yayQrC-6Fichft"
+              }
+              alt={receiver?.name || "User"}
+              className="w-20 h-20 rounded-full object-cover border-4 border-indigo-200 shadow-md"
             />
-            <div className="text-center mt-4 text-xl">{receiver?.name}</div>
+            <div className="text-center mt-4 text-xl font-semibold text-gray-800">
+              {receiver?.name}
+            </div>
           </div>
 
           <div className="cursor-pointer">
-            <Link href="/dashboard">back to Dashboard</Link>
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 shadow-md"
+            >
+              Back to Dashboard
+            </Link>
           </div>
         </div>
         <div className="w-10/12">
-          <div className="h-[7%] w-full flex items-center justify-start px-3 bg-neutral-100 border-b shadow-sm">
+          <div className="h-[7%] w-full flex items-center justify-start px-4 bg-gradient-to-r from-indigo-50 to-white border-b shadow-md">
             <img
-              src="https://lh4.googleusercontent.com/proxy/XZjBQs671YZjpKSHu4nOdgKygc5oteGGQ4nznFtymv2Vr1t6lHDdhqPe-Pk-8IJe7pW4AhhKOTWRVt_b6G4qHF92n7Z1QCMVCNXCP2yayQrC-6Fichft"
-              alt=""
-              className="rounded-full h-12 w-12"
+              src={
+                receiver?.profile_pic ||
+                "https://lh4.googleusercontent.com/proxy/XZjBQs671YZjpKSHu4nOdgKygc5oteGGQ4nznFtymv2Vr1t6lHDdhqPe-Pk-8IJe7pW4AhhKOTWRVt_b6G4qHF92n7Z1QCMVCNXCP2yayQrC-6Fichft"
+              }
+              alt={receiver?.name || "User"}
+              className="rounded-full h-12 w-12 object-cover border-2 border-indigo-200 shadow-sm"
             />
-            <span className="text-xl font-medium mx-3">{receiver?.name}</span>
+            <span className="text-xl font-semibold mx-3 text-gray-800">
+              {receiver?.name}
+            </span>
           </div>
           <div className="overflow-hidden py-4 h-[73%]">
             <div className="h-full overflow-y-auto">
@@ -174,14 +184,24 @@ const Page = ({ params }: { params: { id: string } }) => {
                             alt=""
                             className="h-10 w-10 rounded-full"
                           />
-                          <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                            {
-                              item.isVideo? <div className=" flex flex-col items-center justify-center gap-y-2">
-                                Join Video Call 
-                                <Link className="bg-green-400 text-center  w-[200px] text-base text-white px-16 py-2 rounded-lg"  href={item.content}>Join</Link>
-                              </div> :  <div>{item.content}</div>
-                            }
-
+                          <div className="relative mr-3 text-sm bg-gradient-to-br from-indigo-100 to-indigo-200 py-2 px-4 shadow-lg rounded-xl max-w-md">
+                            {item.isVideo ? (
+                              <div className="flex flex-col items-center justify-center gap-y-2">
+                                <span className="font-medium text-gray-700">
+                                  Join Video Call
+                                </span>
+                                <Link
+                                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-center w-[200px] text-base text-white px-8 py-2 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105"
+                                  href={item.content}
+                                >
+                                  Join
+                                </Link>
+                              </div>
+                            ) : (
+                              <div className="text-gray-800 break-words">
+                                {item.content}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -202,8 +222,10 @@ const Page = ({ params }: { params: { id: string } }) => {
                             alt=""
                             className="rounded-full h-10 w-10"
                           />
-                          <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
-                            <div>{item.content}</div>
+                          <div className="relative ml-3 text-sm bg-gradient-to-br from-white to-gray-50 py-2 px-4 shadow-lg rounded-xl max-w-md border border-gray-200">
+                            <div className="text-gray-800 break-words">
+                              {item.content}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -214,35 +236,69 @@ const Page = ({ params }: { params: { id: string } }) => {
             </div>
           </div>
 
-          <Flexbox className="h-[20%] relative border">
-            <div style={{ flex: 1 }}></div>
-            <ChatInputArea
-              placeholder="Write Your Message Here..."
-              value={content}
-              onChange={(e: any) => {
-                setContent(e.target.value);
-              }}
-              onKeyDown={handleKeyDown}
-              topAddons={
-                <ChatInputActionBar
-                  leftAddons={
-                    <>
-                      <ActionIcon icon={Eraser} onClick={handleErase} />
-                      <ActionIcon icon={Send} onClick={handleSubmit} />
-                      <ActionIcon icon={Video} onClick={sendVideo} />
-                      <EmojiPicker
-                        backgroundColor="white"
-                        onChange={(emoji) => {
-                          setContent(content + emoji);
-                        }}
-                      />
-                      <TokenTag maxValue={500} value={content.length} />
-                    </>
-                  }
+          <div className="h-[20%] relative border-t bg-white flex flex-col shadow-lg">
+            <div className="flex items-center gap-2 px-4 py-2 border-b bg-gradient-to-r from-gray-50 to-white">
+              <button
+                onClick={handleErase}
+                className="p-2.5 hover:bg-indigo-100 rounded-lg transition-all duration-200 text-gray-600 hover:text-indigo-600"
+                title="Clear"
+              >
+                <Eraser className="w-5 h-5" />
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={!content.trim() || !receiver}
+                className="p-2.5 hover:bg-indigo-100 rounded-lg transition-all duration-200 text-gray-600 hover:text-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Send"
+              >
+                <Send className="w-5 h-5" />
+              </button>
+              <button
+                onClick={sendVideo}
+                disabled={!receiver}
+                className="p-2.5 hover:bg-indigo-100 rounded-lg transition-all duration-200 text-gray-600 hover:text-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Video Call"
+              >
+                <Video className="w-5 h-5" />
+              </button>
+              <div className="ml-2">
+                <EmojiPicker
+                  background="white"
+                  onChange={(emoji) => {
+                    setContent(content + emoji);
+                  }}
                 />
-              }
-            />
-          </Flexbox>
+              </div>
+              <div className="ml-auto flex items-center gap-2">
+                <span
+                  className={`text-xs px-2 py-1 rounded-full ${
+                    content.length > 450
+                      ? "text-red-500 bg-red-50"
+                      : content.length > 400
+                      ? "text-orange-500 bg-orange-50"
+                      : "text-gray-500 bg-gray-100"
+                  }`}
+                >
+                  {content.length}/500
+                </span>
+              </div>
+            </div>
+            <div className="flex-1 relative">
+              <textarea
+                placeholder="Write Your Message Here..."
+                value={content}
+                onChange={(e) => {
+                  if (e.target.value.length <= 500) {
+                    setContent(e.target.value);
+                  }
+                }}
+                onKeyDown={handleKeyDown}
+                className="w-full h-full p-4 resize-none border-0 focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-transparent text-gray-800 placeholder-gray-400"
+                rows={3}
+                maxLength={500}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </ThemeProvider>

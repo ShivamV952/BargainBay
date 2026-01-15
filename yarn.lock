@@ -1786,6 +1786,23 @@
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.5.0"
 
+"@lobehub/emojilib@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@lobehub/emojilib/-/emojilib-1.0.0.tgz#5918438f5eb9347f60bce87ac7155ad5a7872e78"
+  integrity sha512-s9KnjaPjsEefaNv150G3aifvB+J3P4eEKG+epY9zDPS2BeB6+V2jELWqAZll+nkogMaVovjEE813z3V751QwGw==
+
+"@lobehub/fluent-emoji@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@lobehub/fluent-emoji/-/fluent-emoji-4.1.0.tgz#6bfc186ccebd6909fabfaf064fbf2e6a4f9322bf"
+  integrity sha512-R1MB2lfUkDvB7XAQdRzY75c1dx/tB7gEvBPaEEMarzKfCJWmXm7rheS6caVzmgwAlq5sfmTbxPL+un99sp//Yw==
+  dependencies:
+    "@lobehub/emojilib" "^1.0.0"
+    antd-style "^4.1.0"
+    emoji-regex "^10.6.0"
+    es-toolkit "^1.43.0"
+    lucide-react "^0.562.0"
+    url-join "^5.0.0"
+
 "@lobehub/ui@^4.4.5":
   version "4.4.5"
   resolved "https://registry.yarnpkg.com/@lobehub/ui/-/ui-4.4.5.tgz#b2a245030b65da590f73a763a1f512fe70edcd5e"
@@ -7182,6 +7199,11 @@ emoji-mart@^5.6.0:
   resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-5.6.0.tgz#71b3ed0091d3e8c68487b240d9d6d9a73c27f023"
   integrity sha512-eJp3QRe79pjwa+duv+n7+5YsNhRcMl812EcFVwrnRvYKoNPoQb5qxU8DG6Bgwji0akHdp6D4Ln6tYLG58MFSow==
 
+emoji-regex@^10.6.0:
+  version "10.6.0"
+  resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-10.6.0.tgz#bf3d6e8f7f8fd22a65d9703475bc0147357a6b0d"
+  integrity sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==
+
 emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
@@ -7361,7 +7383,7 @@ es-toolkit@1.39.3:
   resolved "https://registry.yarnpkg.com/es-toolkit/-/es-toolkit-1.39.3.tgz#934b2cab9578c496dcbc0305cae687258cb14aee"
   integrity sha512-Qb/TCFCldgOy8lZ5uC7nLGdqJwSabkQiYQShmw4jyiPk1pZzaYWTwaYKYP7EgLccWYgZocMrtItrwh683voaww==
 
-es-toolkit@^1.32.0:
+es-toolkit@^1.32.0, es-toolkit@^1.43.0:
   version "1.43.0"
   resolved "https://registry.yarnpkg.com/es-toolkit/-/es-toolkit-1.43.0.tgz#2c278d55ffeb30421e6e73a009738ed37b10ef61"
   integrity sha512-SKCT8AsWvYzBBuUqMk4NPwFlSdqLpJwmy6AP322ERn8W2YLIB6JBXnwMI2Qsh2gfphT3q7EKAxKb23cvFHFwKA==
