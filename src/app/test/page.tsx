@@ -50,9 +50,9 @@ const page = () => {
   ];
 
   const genAI = new GoogleGenerativeAI(
-    "AIzaSyA3vSIwAMZon-UDy_is5Ya7-IJCsLWjlTQ"
+    "AIzaSyAJN5WlepYQNsOF6Rc3yuz_aejF2358xZw"
   );
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); // Specify the model
+  const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" }); // Specify the model
 
   const handleGenerate = async () => {
     if (!prompt) return alert("Please enter a prompt.");
