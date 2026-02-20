@@ -19,7 +19,6 @@ import dynamic from "next/dynamic";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-
 const Card = ({ item, selected }: any) => {
   return (
     <div
@@ -71,7 +70,7 @@ const AISearch = ({ children, products }: any) => {
   };
 
   const genAI = new GoogleGenerativeAI(
-    "AIzaSyAJN5WlepYQNsOF6Rc3yuz_aejF2358xZw"
+    "AIzaSyAeLxetiXR2mOv4hQJDg09NFMZZtEilztM",
   );
   const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
@@ -141,7 +140,7 @@ const AISearch = ({ children, products }: any) => {
                                     item={item}
                                     selected={
                                       selectedProducts.findIndex(
-                                        (p: any) => p.id === item.id
+                                        (p: any) => p.id === item.id,
                                       ) != -1
                                     }
                                   />
